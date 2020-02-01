@@ -38,6 +38,7 @@ function draw() {
   // We can call both functions to draw all keypoints and the skeletons
   drawKeypoints();
   drawSkeleton();
+  console.log(poses);
 }
 
 // A function to draw ellipses over the detected keypoints
