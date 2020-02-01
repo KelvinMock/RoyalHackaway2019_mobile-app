@@ -27,6 +27,7 @@ function setup() {
 
   // Create a new poseNet method with a single detection
   poseNet = ml5.poseNet(video, modelReady);
+  poseNet.detectionType = 'single'; //console.log output will tell you this
   // This sets up an event that fills the global variable "poses"
   // with an array every time new poses are detected
   poseNet.on('pose', function (results) {
@@ -117,15 +118,35 @@ function modelReady() {
 
 // Draw PoseNet
 function draw() {
-  image(img, 0, 0, width, height);
-  strokeWeight(2);
-  // For one pose only (use a for loop for multiple poses!)
-  if (poses.length > 0) {
-    let pose = poses[0].pose;
-    for (let i = 0; i < pose.keypoints.length; i++) {
-      fill(213, 0, 143);
-      noStroke();
-      ellipse(pose.keypoints[i].position.x, pose.keypoints[i].position.y, 8);
+  drawPoints()
+  drawSkeleton()
+}
+
+// A function to draw the skeletons
+function drawSkeleton() {
+  // Loop through all the skeletons detected
+  for (let i = 0; i < poses.length; i++) {
+    let skeleton = poses[i].skeleton;
+    // For every skeleton, loop through all body connections
+    for (let j = 0; j < skeleton.length; j++) {
+      let partA = skeleton[j][0];
+      let partB = skeleton[j][1];
+      stroke(255, 0, 0);
+      line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
     }
   }
 }
+
+  function drawPoints(){
+    image(video, 0, 0, width, height);
+    strokeWeight(2);
+    // For one pose only (use a for loop for multiple poses!)
+    if (poses.length > 0) {
+      let pose = poses[0].pose;
+      for (let i = 0; i < pose.keypoints.length; i++) {
+        fill(213, 0, 143);
+        noStroke();
+        ellipse(pose.keypoints[i].position.x, pose.keypoints[i].position.y, 8);
+      }
+    }
+  }
