@@ -1,0 +1,20 @@
+{
+  "name": "royalhackaway2019_mobile-app",
+  "version": "1.0.0",
+  "description": "to run type the following line in your terminal python3 -m http.server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KelvinMock/RoyalHackaway2019_mobile-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KelvinMock/RoyalHackaway2019_mobile-app/issues"
+  },
+  "homepage": "https://github.com/KelvinMock/RoyalHackaway2019_mobile-app#readme"
+}
