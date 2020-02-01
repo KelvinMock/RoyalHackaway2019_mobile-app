@@ -1,62 +1,125 @@
-// Copyright (c) 2019 ml5
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
 
-/* ===
-ml5 Example
-PoseNet example using p5.js
-=== */
 
+// Video and PoseNet
 let video;
 let poseNet;
 let poses = [];
 
+// Neural Network
+let brain;
+
+// Training interface (will be different screen in app)
+let dataButton;
+let dataLabel;
+let trainButton;
+let classificationP;
+
+let img
+
+function preload() {
+  img = loadImage('images/deep-lunge.jpg');
+}
+
 function setup() {
-  createCanvas(640, 480);
+  createCanvas(320, 240);
   video = createCapture(VIDEO);
   video.size(width, height);
 
   // Create a new poseNet method with a single detection
   poseNet = ml5.poseNet(video, modelReady);
+  poseNet.detectionType = 'single'; //console.log output will tell you this
   // This sets up an event that fills the global variable "poses"
   // with an array every time new poses are detected
-  poseNet.on('pose', function(results) {
+  poseNet.on('pose', function (results) {
     poses = results;
   });
   // Hide the video element, and just show the canvas
-  video.hide();
-}
+  // video.hide();
 
-function modelReady() {
-  select('#status').html('Model Loaded');
-}
+  classificationP = createP('waiting to train model');
 
-function draw() {
-  image(video, 0, 0, width, height);
+  // The interface
+  dataLabel = createSelect();
+  dataLabel.option('A');
+  dataLabel.option('B');
+  dataLabel.option('C');
+  dataLabel.option('D');
 
-  // We can call both functions to draw all keypoints and the skeletons
-  drawKeypoints();
-  drawSkeleton();
-}
+  dataButton = createButton('add example');
+  dataButton.mousePressed(addExample);
 
-// A function to draw ellipses over the detected keypoints
-function drawKeypoints()  {
-  // Loop through all the poses detected
-  for (let i = 0; i < poses.length; i++) {
-    // For each pose detected, loop through all the keypoints
-    let pose = poses[i].pose;
-    for (let j = 0; j < pose.keypoints.length; j++) {
-      // A keypoint is an object describing a body part (like rightArm or leftShoulder)
-      let keypoint = pose.keypoints[j];
-      // Only draw an ellipse is the pose probability is bigger than 0.2
-      if (keypoint.score > 0.2) {
-        fill(255, 0, 0);
-        noStroke();
-        ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
-      }
-    }
+
+  trainButton = createButton('train model');
+  trainButton.mousePressed(trainModel);
+
+  // Create the model
+  let options = {
+    inputs: 34,
+    outputs: 4,
+    task: 'classification',
+    debug: true
   }
+  brain = ml5.neuralNetwork(options);
+}
+
+// Train the model
+function trainModel() {
+  brain.normalizeData();
+  let options = {
+    epochs: 25
+  }
+  brain.train(options, finishedTraining);
+}
+
+// Begin prediction
+function finishedTraining() {
+  classify();
+}
+
+// Classify
+function classify() {
+  if (poses.length > 0) {
+    let inputs = getInputs();
+    brain.classify(inputs, gotResults);
+  }
+}
+
+function gotResults(error, results) {
+  //  Log output
+  classificationP.html(`${results[0].label} (${floor(results[0].confidence * 100)})%`);
+  // Classify again
+  classify();
+}
+
+function getInputs() {
+  let keypoints = poses[0].pose.keypoints;
+  let inputs = [];
+  for (let i = 0; i < keypoints.length; i++) {
+    inputs.push(keypoints[i].position.x);
+    inputs.push(keypoints[i].position.y);
+  }
+  return inputs;
+}
+
+//  Add a training example
+function addExample() {
+  if (poses.length > 0) {
+    let inputs = getInputs();
+    let target = dataLabel.value();
+    brain.addData(inputs, [target]);
+  }
+  console.log("added example")
+}
+
+// PoseNet ready
+function modelReady() {
+  console.log('model loaded');
+}
+
+// Draw PoseNet
+function draw() {
+  drawPoints()
+  drawSkeleton()
 }
 
 // A function to draw the skeletons
@@ -73,3 +136,17 @@ function drawSkeleton() {
     }
   }
 }
+
+  function drawPoints(){
+    image(video, 0, 0, width, height);
+    strokeWeight(2);
+    // For one pose only (use a for loop for multiple poses!)
+    if (poses.length > 0) {
+      let pose = poses[0].pose;
+      for (let i = 0; i < pose.keypoints.length; i++) {
+        fill(213, 0, 143);
+        noStroke();
+        ellipse(pose.keypoints[i].position.x, pose.keypoints[i].position.y, 8);
+      }
+    }
+  }
