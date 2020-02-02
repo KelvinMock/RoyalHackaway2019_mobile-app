@@ -6,6 +6,20 @@ canvas {
   display: block;
 }
 
+
+#start{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 50%;
+    height: 50%;
+    font-size: 15px;
+}
+
+
+
 *
 * Skeleton V2.0.4
 * Copyright 2014, Dave Gamache
