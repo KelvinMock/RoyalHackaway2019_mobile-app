@@ -6,8 +6,8 @@
 ## Hackathon submission for RoyalHackaway
 
 ## to run
-npm install
-npm start
+. npm install
+. npm start
 
 ## Inspiration
 Physiotherapy costs the NHS **millions** of pounds every year and a significant amount of time. It has been shown to be a cost-effective way of speeding up patient recovery for a large number of conditions including back pain (the largest source of productivity loss), Parkinson's, rehabilitation after a heart attack and cystic fibrosis.
