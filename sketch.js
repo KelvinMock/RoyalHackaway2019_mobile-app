@@ -16,9 +16,9 @@ let classificationP;
 
 let img
 
-function preload() {
-  img = loadImage('images/deep-lunge.jpg');
-}
+// function preload() {
+//   img = loadImage('images/deep-lunge.jpg');
+// }
 
 function setup() {
   createCanvas(320, 240);
