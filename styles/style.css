@@ -15,7 +15,25 @@ body {
   background-color: #eff;
 }
 
+<<<<<<< HEAD:style.css
 /*
+=======
+
+#start{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 50%;
+    height: 50%;
+    font-size: 15px;
+}
+
+
+
+*
+>>>>>>> master:styles/style.css
 * Skeleton V2.0.4
 * Copyright 2014, Dave Gamache
 * www.getskeleton.com
