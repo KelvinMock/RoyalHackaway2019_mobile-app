@@ -2,10 +2,10 @@
 
 
 
-#physNet  
-#hackathon submission for RoyalHackaway
+# physNet  
+## Hackathon submission for RoyalHackaway
 
-to run type the following line in your terminal
+## to run
 npm install
 npm start
 
