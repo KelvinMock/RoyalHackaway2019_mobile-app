@@ -1,26 +1,21 @@
 html, body {
   margin: 0;
   padding: 0;
-}
-canvas {
-  display: block;
+  height: 100%;
 }
 
+body {
+  margin: 0;
+  display: flex;
+  /* This centers our sketch horizontally. */
+  justify-content: center;
 
-#start{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -50px;
-    margin-left: -50px;
-    width: 50%;
-    height: 50%;
-    font-size: 15px;
+  /* This centers our sketch vertically. */
+  align-items: center;
+  background-color: #eff;
 }
 
-
-
-*
+/*
 * Skeleton V2.0.4
 * Copyright 2014, Dave Gamache
 * www.getskeleton.com
