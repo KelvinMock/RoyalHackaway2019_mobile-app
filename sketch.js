@@ -14,14 +14,25 @@ let dataLabel;
 let trainButton;
 let classificationP;
 
-let img
+let img;
+
+var counter = {
+"Deep Lunge": 0,
+"Knees to Chest": 0,
+"One Leg Stand": 0,
+"Pelvic Tilt": 0,
+};
 
 function preload() {
   img = loadImage('images/deep-lunge.jpg');
 }
 
 function setup() {
-  createCanvas(320, 240);
+
+  cnv=createCanvas(640, 480);
+
+
+  cnv.center();
   video = createCapture(VIDEO);
   video.size(width, height);
 
@@ -34,23 +45,32 @@ function setup() {
     poses = results;
   });
   // Hide the video element, and just show the canvas
-  // video.hide();
+  video.hide();
 
-  classificationP = createP('waiting to train model');
+  title = createElement('h1', 'PHYSIONET');
+  title.position(windowWidth/2-(title.width/2), windowHeight*(1/16));
+
+  classificationP = createP('Waiting for physio input');
+  classificationP.position(windowWidth/2-(classificationP.width/2), windowHeight*(10/11));;
 
   // The interface
   dataLabel = createSelect();
-  dataLabel.option('A');
-  dataLabel.option('B');
-  dataLabel.option('C');
-  dataLabel.option('D');
+  dataLabel.option('Deep Lunge');
+  dataLabel.option('Knees to Chest');
+  dataLabel.option('One Leg Stand');
+  dataLabel.option('Pelvic Tilt');
+  dataLabel.position(windowWidth*2/6, windowHeight*(6/7));
+
+
 
   dataButton = createButton('add example');
   dataButton.mousePressed(addExample);
+  dataButton.position(windowWidth*3/6-(dataButton.width/2), windowHeight*(6/7));
 
 
   trainButton = createButton('train model');
   trainButton.mousePressed(trainModel);
+  trainButton.position(windowWidth*4/6-(trainButton.width/2), windowHeight*(6/7));
 
   // Create the model
   let options = {
@@ -60,6 +80,8 @@ function setup() {
     debug: true
   }
   brain = ml5.neuralNetwork(options);
+
+
 }
 
 // Train the model
@@ -87,6 +109,12 @@ function classify() {
 function gotResults(error, results) {
   //  Log output
   classificationP.html(`${results[0].label} (${floor(results[0].confidence * 100)})%`);
+  if (floor(results[0].confidence * 100)>60){
+    tint(144,238,144)
+  }
+  else{
+    tint(250,128,114)
+  }
   // Classify again
   classify();
 }
@@ -109,6 +137,9 @@ function addExample() {
     brain.addData(inputs, [target]);
   }
   console.log("added example")
+  counter[dataLabel.value()]+=1;
+  console.log(counter[dataLabel.value()]);
+  console.log(dataLabel.value());
 }
 
 // PoseNet ready
@@ -120,6 +151,7 @@ function modelReady() {
 function draw() {
   drawPoints()
   drawSkeleton()
+  colourButton()
 }
 
 // A function to draw the skeletons
@@ -149,4 +181,24 @@ function drawSkeleton() {
         ellipse(pose.keypoints[i].position.x, pose.keypoints[i].position.y, 8);
       }
     }
+  }
+
+  function colourButton(){
+    let r = 255;
+    let g = 0;
+    let b = 0;
+    if (dataLabel.value() == 'Deep Lunge'){
+      r = 255 - (255/20)*counter['Deep Lunge'];
+      g = (255/20)*counter['Deep Lunge'];
+    }else if (dataLabel.value() == 'Knees to Chest') {
+      r = 255 - (255/20)*counter['Knees to Chest'];
+      g = (255/20)*counter['Knees to Chest'];
+    }else if (dataLabel.value() == 'One Leg Stand') {
+      r = 255 - (255/20)*counter['One Leg Stand'];
+      g = (255/20)*counter['One Leg Stand'];
+    }else if (dataLabel.value() == 'Pelvic Tilt') {
+      r = 255 - (255/20)*counter['Pelvic Tilt'];
+      g = (255/20)*counter['Pelvic Tilt'];
+    }
+    dataButton.style('background-color', color(r, g, b));
   }
