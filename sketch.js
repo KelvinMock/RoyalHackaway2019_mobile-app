@@ -34,7 +34,7 @@ function setup() {
     poses = results;
   });
   // Hide the video element, and just show the canvas
-  // video.hide();
+  video.hide();
 
   classificationP = createP('waiting to train model');
 
